@@ -58,10 +58,12 @@ class PacienteReportes extends \yii\db\ActiveRecord
             [['fecha_reporte', 'fecha_ingreso', 'fecha_notificacion_sivigila', 'hora_remision', 'fecha_egreso', 'created_at', 'updated_at'], 'safe'],
             [['diagnostico', 'evolucion_seguimiento', 'observaciones'], 'string'],
             [['ips_urgencia', 'entidad_remitida', 'responsable_reporte'], 'string', 'max' => 150],
-            [['pertenencia_etnica', 'eps', 'hospital_padrino', 'respuesta_hosp_padrino'], 'string', 'max' => 100],
+            [['pertenencia_etnica', 'eps', 'hospital_padrino', 'respuesta_hosp_padrino','pertenece'], 'string', 'max' => 100],
             [['escala_alerta_temprana', 'telefono_reporta'], 'string', 'max' => 50],
             [['teleapoyo_hosp_padrino', 'requiere_remision'], 'string', 'max' => 10],
             [['motivo_egreso'], 'string', 'max' => 255],
+            [['pertenece'], 'string', 'max' => 100],
+            [['pertenece'], 'safe'],
             [['paciente_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pacientes::class, 'targetAttribute' => ['paciente_id' => 'id']],
         ];
     }
@@ -73,6 +75,7 @@ class PacienteReportes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'pertenece' => 'Pertenece',
             'paciente_id' => 'Paciente ID',
             'fecha_reporte' => 'Fecha Reporte',
             'fecha_ingreso' => 'Fecha Ingreso',

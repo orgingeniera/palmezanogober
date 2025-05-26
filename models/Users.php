@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use Yii;
@@ -8,6 +7,8 @@ use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $new_password; // Propiedad para la nueva contraseña
+
     public static function tableName()
     {
         return '{{%users}}';
@@ -16,7 +17,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'role'], 'required'],
+            [['username', 'password_hash', 'auth_key', 'role', 'nombre', 'email'], 'required'],
             [['username', 'role', 'nombre', 'empresa'], 'string', 'max' => 100],
             [['auth_key'], 'string', 'max' => 32],
             [['access_token'], 'string', 'max' => 100],
@@ -24,6 +25,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['direccion'], 'string', 'max' => 255],
             [['username', 'email'], 'unique'],
             ['email', 'email'],
+            ['new_password', 'string', 'min' => 6], // Validación: la nueva contraseña debe tener al menos 6 caracteres
+            ['new_password', 'default', 'value' => null], // No es obligatorio (opcional para actualización)
         ];
     }
 
@@ -43,6 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
             'empresa' => 'Empresa',
             'created_at' => 'Creado el',
             'updated_at' => 'Actualizado el',
+            'new_password' => 'Nueva Contraseña', // Etiqueta para el campo de nueva contraseña
         ];
     }
 
@@ -96,5 +100,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function generateAccessToken()
     {
         $this->access_token = Yii::$app->security->generateRandomString(100);
+    }
+
+    // Antes de guardar, si hay una nueva contraseña, la hasheamos y actualizamos password_hash
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (!empty($this->new_password)) {
+                $this->setPassword($this->new_password); // Hashea la nueva contraseña
+            }
+            return true;
+        }
+        return false;
     }
 }

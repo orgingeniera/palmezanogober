@@ -28,14 +28,29 @@ AppAsset::register($this);
             color: white;
             padding-top: 20px;
         }
-        .sidebar a {
+        .sidebar a,
+        .sidebar form {
             color: white;
             display: block;
             padding: 10px 15px;
             text-decoration: none;
         }
-        .sidebar a:hover {
+        .sidebar a:hover,
+        .sidebar form:hover {
             background-color: #495057;
+        }
+        .sidebar form {
+            margin: 0;
+        }
+        .sidebar button.logout {
+            background: none;
+            border: none;
+            padding: 0;
+            color: white;
+            text-align: left;
+            width: 100%;
+            padding: 10px 15px;
+            cursor: pointer;
         }
         .main-content {
             flex: 1;
@@ -50,13 +65,25 @@ AppAsset::register($this);
     <h4 style="text-align:center;">Mi Sistema</h4>
     <a href="<?= \yii\helpers\Url::to(['site/index']) ?>">Inicio</a>
     <a href="<?= \yii\helpers\Url::to(['user/index']) ?>">Usuarios</a>
+    <a href="<?= \yii\helpers\Url::to(['pacientes/index']) ?>">Pacientes</a>
+    <a href="<?= \yii\helpers\Url::to(['p-paciente-reportes/index']) ?>">Reporte Pacientes</a>
     <a href="<?= \yii\helpers\Url::to(['site/contact']) ?>">Contacto</a>
-    <!-- Agrega más enlaces aquí -->
+
+    <!-- Login / Logout -->
+    <?php if (Yii::$app->user->isGuest): ?>
+        <a href="<?= \yii\helpers\Url::to(['/site/login']) ?>">Login</a>
+    <?php else: ?>
+        <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'logout-form']) ?>
+            <button type="submit" class="logout">
+                Logout (<?= Html::encode(Yii::$app->user->identity->username) ?>)
+            </button>
+        <?= Html::endForm() ?>
+    <?php endif; ?>
 </div>
 
 <div class="main-content">
     <?= Breadcrumbs::widget([
-        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        'links' => $this->params['breadcrumbs'] ?? [],
     ]) ?>
     <?= $content ?>
 </div>

@@ -48,6 +48,12 @@ class Pacientes extends \yii\db\ActiveRecord
             [['identificacion', 'telefono'], 'string', 'max' => 50],
             [['direccion'], 'string', 'max' => 255],
             [['municipio_residencia', 'pais_origen'], 'string', 'max' => 100],
+            [['pertenece'], 'string', 'max' => 100],
+            [['pertenece'], 'safe'],
+            [['nombre', 'tipo_identificacion', 'identificacion'], 'trim'],
+            [['nombre'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/u', 'message' => 'El nombre solo puede contener letras y espacios.'],
+            [['tipo_identificacion'], 'in', 'range' => ['CC', 'TI', 'CE', 'NIT'], 'message' => 'Tipo de identificación no válido.'],
+            [['identificacion'], 'match', 'pattern' => '/^\d+$/', 'message' => 'La identificación debe ser numérica.'], 
             [['identificacion'], 'unique'],
         ];
     }
@@ -59,6 +65,7 @@ class Pacientes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'pertenece' => 'Pertenece',
             'nombre' => 'Nombre',
             'tipo_identificacion' => 'Tipo Identificacion',
             'identificacion' => 'Identificacion',

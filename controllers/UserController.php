@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Pacientes;
-use app\models\PacientesSearch;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PacientesController implements the CRUD actions for Pacientes model.
+ * UserController implements the CRUD actions for User model.
  */
-class PacientesController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,13 +33,13 @@ class PacientesController extends Controller
     }
 
     /**
-     * Lists all Pacientes models.
+     * Lists all User models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new PacientesSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -49,8 +49,8 @@ class PacientesController extends Controller
     }
 
     /**
-     * Displays a single Pacientes model.
-     * @param int $id ID
+     * Displays a single User model.
+     * @param int $id
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -62,59 +62,76 @@ class PacientesController extends Controller
     }
 
     /**
-     * Creates a new Pacientes model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new Pacientes();
+{
+    $model = new User();
 
-            if ($this->request->isPost) {
-                    if ($model->load($this->request->post())) {
-                $model->pertenece = (string)Yii::$app->user->id; // ✅ después del load()
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    echo "<pre>";
-                    print_r($model->getErrors());
-                    echo "</pre>";
-                    exit;
-                }
-             }
-        } else {
-            $model->loadDefaultValues();
+    if ($this->request->isPost && $model->load($this->request->post())) {
+
+        $model->generateAuthKey();
+        $model->generateAccessToken();
+
+        if ($model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    } else {
+        $model->loadDefaultValues();
     }
 
+    return $this->render('create', [
+        'model' => $model,
+    ]);
+}
+
+
+
     /**
-     * Updates an existing Pacientes model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $id
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+  public function actionUpdate($id)
+{
+    $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    // Guardamos la contraseña actual para compararla después
+    $currentPassword = $model->password_hash;
+
+    if ($this->request->isPost && $model->load($this->request->post())) {
+
+        // Captura manual del valor ingresado (por si el campo no se mapea directamente)
+        $newPassword = Yii::$app->request->post('User')['new_password'];
+
+        if (!empty($newPassword)) {
+            $model->setPassword($newPassword); // encripta nuevo
+        } else {
+            $model->password_hash = $currentPassword; // conserva la original
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        if ($model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
     }
 
+    return $this->render('update', [
+        'model' => $model,
+    ]);
+}
+
+
+
+
+
     /**
-     * Deletes an existing Pacientes model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -126,15 +143,15 @@ class PacientesController extends Controller
     }
 
     /**
-     * Finds the Pacientes model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Pacientes the loaded model
+     * @param int $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Pacientes::findOne(['id' => $id])) !== null) {
+        if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
