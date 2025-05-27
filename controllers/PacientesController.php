@@ -8,6 +8,9 @@ use app\models\PacientesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 /**
  * PacientesController implements the CRUD actions for Pacientes model.
@@ -47,6 +50,55 @@ class PacientesController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+public function actionExportExcel()
+{
+    $userId = Yii::$app->user->id;
+    $user = \app\models\User::findOne($userId);
+
+    if (!$user) {
+        throw new \yii\web\ForbiddenHttpException('Usuario no autenticado.');
+    }
+
+    if ($user->role === 'administrador') {
+        // Si es admin, trae todos los pacientes
+        $pacientes = \app\models\Pacientes::find()->all();
+    } else {
+        // Si no es admin, solo trae los pacientes que le pertenecen
+        $pacientes = \app\models\Pacientes::find()->where(['pertenece' => $userId])->all();
+    }
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Encabezados
+    $sheet->setCellValue('A1', 'ID');
+    $sheet->setCellValue('B1', 'Nombre');
+    $sheet->setCellValue('C1', 'Tipo Identificación');
+    $sheet->setCellValue('D1', 'Identificación');
+    $sheet->setCellValue('E1', 'Edad');
+
+    $row = 2;
+    foreach ($pacientes as $p) {
+        $sheet->setCellValue('A' . $row, $p->id);
+        $sheet->setCellValue('B' . $row, $p->nombre);
+        $sheet->setCellValue('C' . $row, $p->tipo_identificacion);
+        $sheet->setCellValue('D' . $row, $p->identificacion);
+        $sheet->setCellValue('E' . $row, $p->edad);
+        $row++;
+    }
+
+    $filename = 'pacientes_export_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header("Content-Disposition: attachment;filename=\"$filename\"");
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
+}
+
+
 
     /**
      * Displays a single Pacientes model.
