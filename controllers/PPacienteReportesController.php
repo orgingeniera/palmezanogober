@@ -2,7 +2,10 @@
 
 namespace app\controllers;
 
+use Yii;
 use app\models\PacienteReportes;
+use app\models\Pacientes; // ¡Importa el modelo Pacientes!
+use yii\helpers\ArrayHelper; // Importa ArrayHelper para formatear la lista
 use app\models\PacienteReportesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -66,21 +69,44 @@ class PPacienteReportesController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new PacienteReportes();
+{
+    $model = new PacienteReportes();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+    // Obtener los pacientes para el dropdown
+    $pacientes = Pacientes::find()->orderBy('nombre')->all();
+    $items = ArrayHelper::map($pacientes, 'id', 'nombre');
+
+    if ($this->request->isPost) {
+        if ($model->load($this->request->post())) {
+            // Asignar el id del usuario logueado al campo pertenece
+            $model->pertenece = (string)Yii::$app->user->id;
+
+            if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                // Mostrar errores si falla la validación o guardado
+                echo "<pre>";
+                print_r($model->getErrors());
+                echo "</pre>";
+                exit;
             }
         } else {
-            $model->loadDefaultValues();
+            // Si no carga bien el modelo (improbable), volver a renderizar
+            return $this->render('create', [
+                'model' => $model,
+                'items' => $items,
+            ]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    } else {
+        $model->loadDefaultValues();
     }
+
+    return $this->render('create', [
+        'model' => $model,
+        'items' => $items,
+    ]);
+}
+
 
     /**
      * Updates an existing PacienteReportes model.
@@ -89,9 +115,14 @@ class PPacienteReportesController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        // --- Start: Ensure $items is defined for update as well ---
+        $pacientes = Pacientes::find()->orderBy('nombre')->all();
+        $items = ArrayHelper::map($pacientes, 'id', 'nombre');
+        // --- End: Ensure $items is defined for update as well ---
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -99,9 +130,10 @@ class PPacienteReportesController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'items' => $items, // <--- IMPORTANT: Pass $items here
         ]);
     }
-
+ 
     /**
      * Deletes an existing PacienteReportes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

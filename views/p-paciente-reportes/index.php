@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'paciente_id',
+          [
+            'attribute' => 'Paciente',
+            'value' => function($model) {
+                return $model->paciente ? $model->paciente->nombre : '(No definido)';
+            },
+            'filter' => \yii\helpers\ArrayHelper::map(\app\models\Pacientes::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+         ],
             'fecha_reporte',
             'fecha_ingreso',
             'fecha_notificacion_sivigila',

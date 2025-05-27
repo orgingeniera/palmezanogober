@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use kartik\export\ExportMenu;
 
 /** @var yii\web\View $this */
 /** @var app\models\PacientesSearch $searchModel */
@@ -22,6 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <p>
+    <?= Html::a('Exportar a Excel', ['export-excel'], ['class' => 'btn btn-info']) ?>
+</p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -47,7 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
                  }
             ],
         ],
-    ]); ?>
+    ]); 
+   
+
+    ?>
 
 
 </div>
