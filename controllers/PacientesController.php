@@ -69,17 +69,17 @@ class PacientesController extends Controller
     public function actionCreate()
     {
         $model = new Pacientes();
-
+        $pacientes = Pacientes::find()
+        ->select(['nombre']) // o 'nombre_completo' o cualquier campo visible
+        ->indexBy('id')
+        ->column();     
             if ($this->request->isPost) {
                     if ($model->load($this->request->post())) {
                 $model->pertenece = (string)Yii::$app->user->id; // ✅ después del load()
                 if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
-                    echo "<pre>";
-                    print_r($model->getErrors());
-                    echo "</pre>";
-                    exit;
+                    Yii::$app->session->setFlash('error', 'El paciente ya existe o hay errores al guardar.');
                 }
              }
         } else {
@@ -88,6 +88,7 @@ class PacientesController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'pacientes' => $pacientes,
         ]);
     }
 

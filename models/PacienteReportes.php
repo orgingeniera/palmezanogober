@@ -62,7 +62,7 @@ class PacienteReportes extends \yii\db\ActiveRecord
             [['escala_alerta_temprana', 'telefono_reporta'], 'string', 'max' => 50],
             [['teleapoyo_hosp_padrino', 'requiere_remision'], 'string', 'max' => 10],
             [['motivo_egreso'], 'string', 'max' => 255],
-            [['pertenece'], 'string', 'max' => 100],
+            [['pertenece'], 'integer', 'max' => 100],
             [['pertenece'], 'safe'],
             [['paciente_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pacientes::class, 'targetAttribute' => ['paciente_id' => 'id']],
         ];
@@ -111,5 +111,8 @@ class PacienteReportes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Pacientes::class, ['id' => 'paciente_id']);
     }
-
+    public function getUsuario()
+    {
+        return $this->hasOne(User::class, ['id' => 'pertenece']);
+    }
 }

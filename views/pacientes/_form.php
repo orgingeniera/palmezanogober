@@ -9,7 +9,11 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="pacientes-form">
-
+<?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissible">
+        <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+<?php endif; ?>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>

@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
    <?= $form->field($model, 'role')->dropDownList(
     [
         'administrador' => 'Administrador',
-        'gestor' => 'Gestor',
+        'ipsdeUrgencias' => 'ipsdeUrgencias',
     ],
     ['prompt' => 'Selecciona un rol'] // Opción para mostrar un texto inicial
 ) ?>

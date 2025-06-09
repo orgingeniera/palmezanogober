@@ -29,11 +29,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'nombre',
-            'tipo_identificacion',
-            'identificacion',
-            'edad',
+             'tipo_identificacion',
+             'identificacion',
+             'nombre',
+             'edad',
+            [
+                'attribute' => 'pertenece',
+                'label' => 'Atendido por',
+                'value' => function ($model) {
+                    return $model->usuario ? $model->usuario->empresa : '(no asignado)';
+                },
+            ],
             //'telefono',
             //'direccion',
             //'municipio_residencia',

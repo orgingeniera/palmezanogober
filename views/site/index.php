@@ -1,53 +1,126 @@
-<?php
+<style>
+    .stat-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        padding: 20px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 150px;
+        transition: transform 0.2s ease;
+    }
 
-/** @var yii\web\View $this */
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
 
-$this->title = 'My Yii Application';
-?>
-<div class="site-index">
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-    <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+    .stat-title {
+        font-size: 13px;
+        letter-spacing: 1px;
+        color: #666;
+        margin-top: 4px;
+    }
 
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
+    .stat-footer {
+        margin-top: auto;
+        padding-top: 10px;
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f1f1f1;
+    }
 
-    <div class="body-content">
+    .icon {
+        font-size: 22px;
+    }
 
-        <div class="row">
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+    .section-title {
+        font-weight: bold;
+        font-size: 20px;
+        margin: 30px 0 15px;
+    }
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+    .text-orange { color: #e67e22; }
+    .text-cyan { color: #00bcd4; }
+    .text-purple { color: #9b59b6; }
+</style>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+<div class="container">
+     <!-- Funciones Generales -->
+    <div class="section-title text-secondary">Funciones Generales</div>
+    <div class="row g-3">
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-cyan">Configuración</div><div class="icon text-cyan">⚙️</div></div></div></div>
+       <?= \yii\helpers\Html::a(
+    '<div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-value text-purple">Paciente</div>
+            <div class="icon text-purple">🧍‍♂️</div>
         </div>
+    </div>',
+    ['pacientes/index'],
+    [
+        'class' => 'col-md-3',
+        'style' => 'text-decoration: none;',
+        'encode' => false,
+    ]
+) ?>
+
+<?= \yii\helpers\Html::a(
+    '<div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-value text-orange">Reporte</div>
+            <div class="icon text-orange">📋</div>
+        </div>
+    </div>',
+    ['p-paciente-reportes/index'],
+    [
+        'class' => 'col-md-3',
+        'style' => 'text-decoration: none;',
+        'encode' => false,
+    ]
+) ?>
 
     </div>
+
+    <!-- Usuario IPS -->
+    <div class="section-title text-danger">Usuario IPS</div>
+    <div class="row g-3">
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-danger">MME</div><div class="icon text-danger">💊</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-danger">JotForm</div><div class="icon text-danger">📄</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-danger">Pisis</div><div class="icon text-danger">📊</div></div></div></div>
+    </div>
+
+    <!-- Usuario EPS -->
+    <div class="section-title text-success">Usuario EPS</div>
+    <div class="row g-3">
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-success">Cohorte Gestantes</div><div class="icon text-success">👶</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-success">Evaluación Indicadores</div><div class="icon text-success">📈</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-success">MME Aseguradas</div><div class="icon text-success">✅</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-success">Contratación</div><div class="icon text-success">📑</div></div></div></div>
+    </div>
+
+    <!-- Usuario Secretarías -->
+    <div class="section-title text-primary">Usuario Secretarías</div>
+    <div class="row g-3">
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-primary">Diálogos de Saberes</div><div class="icon text-primary">💬</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-primary">IEC</div><div class="icon text-primary">🧠</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-primary">Redes Comunitarias</div><div class="icon text-primary">🌐</div></div></div></div>
+        <div class="col-md-3"><div class="stat-card"><div class="stat-header"><div class="stat-value text-primary">MME No Aseguradas</div><div class="icon text-primary">⚠️</div></div></div></div>
+    </div>
+
+   
 </div>

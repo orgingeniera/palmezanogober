@@ -48,7 +48,7 @@ class Pacientes extends \yii\db\ActiveRecord
             [['identificacion', 'telefono'], 'string', 'max' => 50],
             [['direccion'], 'string', 'max' => 255],
             [['municipio_residencia', 'pais_origen'], 'string', 'max' => 100],
-            [['pertenece'], 'string', 'max' => 100],
+            [['pertenece'], 'integer', 'max' => 100],
             [['pertenece'], 'safe'],
             [['nombre', 'tipo_identificacion', 'identificacion'], 'trim'],
             [['nombre'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/u', 'message' => 'El nombre solo puede contener letras y espacios.'],
@@ -87,6 +87,11 @@ class Pacientes extends \yii\db\ActiveRecord
     public function getPacienteReportes()
     {
         return $this->hasMany(PacienteReportes::class, ['paciente_id' => 'id']);
+    }
+
+    public function getUsuario()
+    {
+        return $this->hasOne(User::class, ['id' => 'pertenece']);
     }
 
 }

@@ -1,55 +1,101 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-
-/** @var app\models\LoginForm $model */
-
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<style>
+    .login-container {
+        max-width: 420px;
+        margin: 100px auto;
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+        font-family: 'Poppins', sans-serif;
+    }
 
-    <div class="row">
-        <div class="col-lg-5">
+    .login-container h1 {
+        text-align: center;
+        color: #0A4D68;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
 
-            <?php $form = ActiveForm::begin([
-                'id' => 'login-form',
-                'fieldConfig' => [
-                    'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
-                ],
-            ]); ?>
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 16px;
+    }
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+    .btn-login {
+        background-color: #0A4D68;
+        color: white;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: bold;
+        width: 100%;
+        transition: background 0.3s;
+    }
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+    .btn-login:hover {
+        background-color: #28C3B5;
+        color: #fff;
+    }
 
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
+    .custom-control {
+        margin-bottom: 15px;
+    }
 
-            <div class="form-group">
-                <div>
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-            </div>
+    .login-footer {
+        text-align: center;
+        color: #888;
+        margin-top: 25px;
+        font-size: 14px;
+    }
 
-            <?php ActiveForm::end(); ?>
+    .invalid-feedback {
+        font-size: 13px;
+        color: #dc3545;
+    }
+</style>
 
-            <div style="color:#999;">
-                You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-                To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-            </div>
-
-        </div>
+<div class="login-container">
+   <center  >
+      <div style="display: flex; justify-content: center; margin-top: -30px;">
+        <?= \yii\helpers\Html::img('@web/img/logogenesys.jpeg', [
+            'alt' => 'Logo GENESYS',
+            'style' => 'max-width: 250px; height: auto;'
+        ]) ?>
     </div>
+    </center>
+
+
+    <?php $form = ActiveForm::begin([
+        'id' => 'login-form',
+        'fieldConfig' => [
+            'template' => "{label}\n{input}\n{error}",
+            'labelOptions' => ['class' => 'form-label mt-2'],
+            'inputOptions' => ['class' => 'form-control'],
+            'errorOptions' => ['class' => 'invalid-feedback'],
+        ],
+    ]); ?>
+
+    <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'placeholder' => 'Nombre de usuario']) ?>
+
+    <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña']) ?>
+
+    <?= $form->field($model, 'rememberMe')->checkbox([
+        'template' => "<div class=\"custom-control custom-checkbox mb-3\">{input} {label}</div>\n{error}",
+    ]) ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Iniciar sesión', ['class' => 'btn btn-login', 'name' => 'login-button']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+    
 </div>

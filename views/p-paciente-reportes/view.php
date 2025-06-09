@@ -30,7 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'paciente_id',
+           [
+                'label' => 'Paciente',
+                'value' => function($model) {
+                    return $model->paciente ? $model->paciente->nombre : 'No asignado';
+                },
+            ],
             'fecha_reporte',
             'fecha_ingreso',
             'fecha_notificacion_sivigila',
@@ -51,8 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'responsable_reporte',
             'telefono_reporta',
             'observaciones:ntext',
-            'created_at',
-            'updated_at',
+           
         ],
     ]) ?>
 

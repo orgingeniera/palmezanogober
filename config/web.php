@@ -12,6 +12,13 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'assetManager' => [
+        'bundles' => [
+            'kartik\select2\Select2Asset' => [
+                'bsDependencyEnabled' => false, // para evitar cargar bootstrap 3
+            ],
+        ],
+    ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Mf62yLMDnv8Yv4dX7ko1AXlONifCfri7',
